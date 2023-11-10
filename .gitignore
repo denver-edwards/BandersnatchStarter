@@ -118,3 +118,9 @@ dmypy.json
 .pyre/
 .pytype/
 cython_debug/
+.idea/misc.xml
+.idea/modules.xml
+.idea/inspectionProfiles/profiles_settings.xml
+.idea/BandersnatchStarter.iml
+.idea/vcs.xml
+run.sh
