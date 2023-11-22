@@ -1,12 +1,12 @@
 from pandas import DataFrame
 from sklearn.ensemble import RandomForestClassifier
 import joblib
-import os
+from datetime import datetime
 
 
 class Machine:
 
-    def __init__(self, df: DataFrame):
+    def __init__(self, df: DataFrame = None, model=None):
         """
         Initializes with a RandomForestClassifier
         model trained on the provided DataFrame.
@@ -14,10 +14,15 @@ class Machine:
           Args: df (DataFrame): A DataFrame
         """
         self.name = "Random Forest Classifier"
-        target = df["Rarity"]
-        features = df.drop(columns=["Rarity"])
-        self.model = RandomForestClassifier()
-        self.model.fit(features, target)
+        self.timestamp = "2023-11-22 11:51:38 AM"
+
+        if df is not None:
+            target = df["Rarity"]
+            features = df.drop(columns=["Rarity"])
+            self.model = RandomForestClassifier()
+            self.model.fit(features, target)
+        elif model is not None:
+            self.model = model
 
     def __call__(self, pred_basis: DataFrame):
         """
@@ -40,7 +45,6 @@ class Machine:
         Args:
             filepath (str): The path where the model should be saved.
         """
-        os.makedirs(os.path.dirname(filepath))
         joblib.dump(self.model, filepath)
 
     @staticmethod
@@ -52,18 +56,15 @@ class Machine:
          loaded.
 
          Returns:
-             Machine instance containing model
+             Model
          """
-        model = joblib.load(filepath)
-        machine = Machine.__new__(Machine)
-        machine.model = model
-        machine.name = "Random Forest Classifier"
-        return machine
+        return joblib.load(filepath)
 
     def info(self):
         """
         Provides information about the model.
         """
-        model_info = f"<p>Base Model: {self.name}</p>"
+        model_info = (f"<p>Base Model: {self.name}<br/>"
+                      f"Timestamp: {self.timestamp}</p>")
 
         return model_info
